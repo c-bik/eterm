@@ -4,14 +4,33 @@ void term::set(unsigned char t, string typestr, char * str)
 {
 	type_code = t;
 	type = typestr;
-	v.s = new string(str);
+	v.ppr.v = new string(str);
+}
+
+void term::set(unsigned char t, string typestr, char *ns, int n, int c)
+{
+	type_code = t;
+	type = typestr;
+	v.ppr.v = new string(ns);
+	v.ppr.n = n;
+	v.ppr.c = c;
+}
+
+void term::set(unsigned char t, string typestr, char *ns, int n, int s, int c)
+{
+	type_code = t;
+	type = typestr;
+	v.ppr.v = new string(ns);
+	v.ppr.n = n;
+	v.ppr.s = s;
+	v.ppr.c = c;
 }
 
 void term::set(unsigned char t, string typestr, unsigned char * str, int strl)
 {
 	type_code = t;
 	type = typestr;
-	v.s = new string((char*)str, strl);
+	v.ppr.v = new string((char*)str, strl);
 }
 
 void term::set(unsigned char t, string typestr, double dbl)
@@ -53,7 +72,7 @@ void term::set(unsigned char t, string typestr, term trm, unsigned long long idx
 {
 	type_code = t;
 	type = typestr;
-	if (!(v.v))
-		v.v = new vector<term>;
-	v.v->push_back(trm);
+	if(v.lt == NULL)
+		v.lt = new vector<term>(10);
+	v.lt->push_back(trm);
 }

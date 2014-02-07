@@ -35,6 +35,7 @@ public:
 	}
 	static inline void get_stats(unsigned long & allocated, unsigned long & freed) { erl_eterm_statistics(&allocated,&freed); };
 	term decode(void *);
+	vector<unsigned char> encode(term &);
 	inline ~eterm(void) {};
 };
 

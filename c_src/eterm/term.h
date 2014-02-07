@@ -14,8 +14,7 @@ using namespace std;
 class term {
 public:
 	union {
-		vector<term> * v;
-		string * s;
+		vector<term> * lt; // list or tuple
 		int	i;
 		unsigned int ui;
 		double d;
@@ -23,26 +22,34 @@ public:
 		long long ll;
 		unsigned long ul;
 		unsigned long long ull;
+		struct {
+			string * v;
+			int n;
+			int s;
+			int c;
+		} ppr; // pid, port, ref, string or binary
 	} v;
 	string type;
 	unsigned char type_code;
 
-	inline term() { v.v = NULL; v.s = NULL; };
+	inline term() { v.lt = NULL; v.ppr.v = NULL; };
 	inline ~term()
 	{
-		if(!(v.v) && (type_code == ERL_TUPLE
-				   || type_code == ERL_LIST))
-			delete v.v;
-		else if(!(v.s) && (type_code == ERL_ATOM
-			            || type_code == ERL_PID
-			            || type_code == ERL_PORT
-			            || type_code == ERL_REF
-			            || type_code == ERL_BINARY
+		if(!(v.lt) && (type_code == ERL_TUPLE
+					|| type_code == ERL_LIST))
+			delete v.lt;
+		else if(!(v.ppr.v) && (type_code == ERL_ATOM
+							|| type_code == ERL_PID
+							|| type_code == ERL_PORT
+							|| type_code == ERL_REF
+							|| type_code == ERL_BINARY
 						))
-			delete v.s;
+			delete v.ppr.v;
 	};
 
 	void set(unsigned char, string, char *);
+	void set(unsigned char, string typestr, char *, int, int);
+	void set(unsigned char, string typestr, char *, int, int, int);
 	void set(unsigned char, string, unsigned char *, int);
 	void set(unsigned char, string, double);
 	void set(unsigned char, string, int);
