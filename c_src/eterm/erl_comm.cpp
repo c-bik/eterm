@@ -1,7 +1,11 @@
 #ifdef __WIN32__
 #include <WinSock.h>
+typedef u_long ul;
 #else
+#include <string.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+typedef uint32_t ul;
 #endif
 
 #include "erl_comm.h"
@@ -20,13 +24,12 @@ int i_write(byte * buf, int to_write)
 {
 	size_t before = cout.tellp();
 	if (cout.write((char*)buf, to_write)) {
-		if(cout.fail())
-			return (-1);
-		else {
+		if(!cout.fail()) {
 			size_t now = cout.tellp();
 			return (int)(now - before);
 		}
 	}
+	return (-1);
 }
 
 int read_exact(byte *buf, long len)
@@ -66,16 +69,16 @@ int read_cmd(byte *buf)
 			len = 4;
 	}
 
-	len = (int)ntohl(*((u_long*)buf));
+	len = (int)ntohl(*((ul*)buf));
 	return read_exact(buf, len);
 }
 
 int write_cmd(byte *buf, int len)
 {
 	byte li[4];
-	u_long _len;
+	ul _len;
 
-	_len = htonl((u_long)len);
+	_len = htonl((ul)len);
 	memcpy(li, &_len, 4);
 
 	write_exact(li, 4);

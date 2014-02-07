@@ -14,8 +14,7 @@ eterm::eterm(void)
     }
 #else
     if(pthread_mutex_init(&transcoder_lock, NULL) != 0) {
-        REMOTE_LOG(CRT, "Write Mutex creation failed");
-        return false;
+        return;
     }
 #endif
 }
@@ -36,7 +35,7 @@ void eterm::unlock()
 #ifdef __WIN32__
     ReleaseMutex(transcoder_lock);
 #else
-    pthread_mutex_unlock(&transcoder_lock)
+    pthread_mutex_unlock(&transcoder_lock);
 #endif
 }
 
