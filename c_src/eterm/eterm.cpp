@@ -128,22 +128,22 @@ static ETERM *stl_to_erlterm(term & t)
 	ETERM * et = NULL;
 	switch (t.type_code) {
 		case ERL_ATOM:
-			et = erl_mk_atom(t.v.ppr.v->c_str());
+			et = erl_mk_atom(t.str.c_str());
 			break;
 		case ERL_FLOAT:
 			et = erl_mk_float(t.v.d);
 			break;
 		case ERL_PID:
-			et = erl_mk_pid(t.v.ppr.v->c_str(), t.v.ppr.n, t.v.ppr.s, t.v.ppr.c);
+			et = erl_mk_pid(t.str.c_str(), t.v.ppr.n, t.v.ppr.s, t.v.ppr.c);
 			break;
 		case ERL_PORT:
-			et = erl_mk_port(t.v.ppr.v->c_str(), t.v.ppr.n, t.v.ppr.c);
+			et = erl_mk_port(t.str.c_str(), t.v.ppr.n, t.v.ppr.c);
 			break;
 		case ERL_REF:
-			et = erl_mk_ref(t.v.ppr.v->c_str(), t.v.ppr.n, t.v.ppr.c);
+			et = erl_mk_ref(t.str.c_str(), t.v.ppr.n, t.v.ppr.c);
 			break;
 		case ERL_BINARY:
-			et = erl_mk_binary(t.v.ppr.v->c_str(), (int)t.v.ppr.v->length());
+			et = erl_mk_binary(t.str.c_str(), (int)t.str.length());
 			break;
 		case ERL_INTEGER:
 			et = erl_mk_int(t.v.i);
@@ -158,17 +158,17 @@ static ETERM *stl_to_erlterm(term & t)
 			et = erl_mk_ulonglong(t.v.ull);
 			break;
 		case ERL_LIST: {
-			ETERM ** et_ms = new ETERM*[t.v.lt->size()];
-			for(int i = 0; i < t.v.lt->size(); ++i)
-				et_ms[i] = stl_to_erlterm(t.v.lt->at(i));
-			et = erl_mk_list(et_ms, (int)t.v.lt->size());
+			ETERM ** et_ms = new ETERM*[t.lt.size()];
+			for(int i = 0; i < t.lt.size(); ++i)
+				et_ms[i] = stl_to_erlterm(t.lt[i]);
+			et = erl_mk_list(et_ms, (int)t.lt.size());
 					   }
 			break;
 		case ERL_TUPLE: {
-			ETERM ** et_ms = new ETERM*[t.v.lt->size()];
-			for(int i = 0; i < t.v.lt->size(); ++i)
-				et_ms[i] = stl_to_erlterm(t.v.lt->at(i));
-			et = erl_mk_tuple(et_ms, (int)t.v.lt->size());
+			ETERM ** et_ms = new ETERM*[t.lt.size()];
+			for(int i = 0; i < t.lt.size(); ++i)
+				et_ms[i] = stl_to_erlterm(t.lt[i]);
+			et = erl_mk_tuple(et_ms, (int)t.lt.size());
 						}
 			break;
 	}

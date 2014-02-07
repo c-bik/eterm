@@ -13,8 +13,9 @@ using namespace std;
 
 class term {
 public:
+	vector<term> lt; // list or tuple
+	string str;
 	union {
-		vector<term> * lt; // list or tuple
 		int	i;
 		unsigned int ui;
 		double d;
@@ -23,7 +24,6 @@ public:
 		unsigned long ul;
 		unsigned long long ull;
 		struct {
-			string * v;
 			int n;
 			int s;
 			int c;
@@ -32,20 +32,8 @@ public:
 	string type;
 	unsigned char type_code;
 
-	inline term() { v.lt = NULL; v.ppr.v = NULL; };
-	inline ~term()
-	{
-		if(!(v.lt) && (type_code == ERL_TUPLE
-					|| type_code == ERL_LIST))
-			delete v.lt;
-		else if(!(v.ppr.v) && (type_code == ERL_ATOM
-							|| type_code == ERL_PID
-							|| type_code == ERL_PORT
-							|| type_code == ERL_REF
-							|| type_code == ERL_BINARY
-						))
-			delete v.ppr.v;
-	};
+	inline term() { };
+	inline ~term() { };
 
 	void set(unsigned char, string, char *);
 	void set(unsigned char, string typestr, char *, int, int);
