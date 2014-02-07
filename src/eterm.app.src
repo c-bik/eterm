@@ -1,0 +1,12 @@
+{application, eterm,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { eterm_app, []}},
+  {env, []}
+ ]}.
