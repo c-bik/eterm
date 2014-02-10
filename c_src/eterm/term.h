@@ -2,8 +2,6 @@
 #ifndef _TERM_H_
 #define _TERM_H_
 
-typedef unsigned char byte;
-
 #include <iostream>
 #include <string>
 #include <vector>

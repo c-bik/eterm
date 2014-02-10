@@ -1,7 +1,7 @@
 #ifdef __WIN32__
 #include <io.h>
 #include <fcntl.h>
-#include <tchar.h>
+#include <stdio.h>
 #else
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,7 +10,7 @@
 #include "erl_comm.h"
 #include "eterm.h"
 
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
 #ifdef __WIN32__
     _setmode( _fileno( stdout ), _O_BINARY );
@@ -18,7 +18,6 @@ int _tmain(int argc, _TCHAR* argv[])
 #endif
 
 
-#if 0
 	byte buf[] = 
 	//{131,100,0,1,97}; // atom a
 	//{131,107,0,3,1,2,3}; // [1,2,3]
@@ -42,13 +41,12 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	size_t s = b.size();
 	unsigned char *out_buf = (unsigned char *)(&b[0]);*/
-#endif
 
 	vector<byte> read_buf(4);
 	eterm& et = eterm::getInstance();
 	while (read_cmd(read_buf) > 0) {
 		term t = et.decode(read_buf);
-		//printf("Just a breakpoint...");
+		//sprintf("Just a breakpoint...");
 		vector<byte> write_buf = et.encode(t);
 		write_cmd(write_buf);
 	}

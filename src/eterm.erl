@@ -76,7 +76,7 @@ handle_call(close, _From, #state{port=Port} = State) ->
 handle_call({send, Msg}, _From, #state{port=Port} = State) ->
     BTerm = term_to_binary(Msg),
     true = port_command(Port, BTerm),
-    {noreply, State}.
+    {reply, ok, State}.
 
 handle_cast(Msg, State) ->
     ?L("Received unexpected cast: ~p~n", [Msg]),

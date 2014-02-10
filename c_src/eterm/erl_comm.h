@@ -7,7 +7,8 @@
 
 using namespace std;
 
-#include "term.h"
+typedef unsigned char byte;
+
 extern int read_cmd(vector<byte>&);
 extern int write_cmd(vector<byte>&);
 

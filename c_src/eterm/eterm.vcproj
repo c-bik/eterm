@@ -41,13 +41,15 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/D__WIN32__ /DWIN32 /D_CONSOLE /D_UNICODE /DUNICODE /W3 /nologo /TP"
 				Optimization="0"
+				EnableIntrinsicFunctions="false"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;C:\Program Files\erlang\erl5.10.4\lib\erl_interface-3.7.15\include&quot;"
-				PreprocessorDefinitions="__WIN32__"
-				MinimalRebuild="true"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;__WIN32__"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
+				EnableFunctionLevelLinking="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -64,12 +66,16 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ei_mdd.lib erl_interface_mdd.lib wsock32.lib"
-				OutputFile="$(ProjectDir)..\..\priv\eterm.exe"
+				ShowProgress="2"
+				OutputFile="$(ProjectDir)..\..\priv\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;C:\Program Files\erlang\erl5.10.4\lib\erl_interface-3.7.15\lib&quot;"
 				IgnoreDefaultLibraryNames="libcmt.lib;msvcrt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
+				OptimizeReferences="0"
+				EnableCOMDATFolding="0"
+				LinkTimeCodeGeneration="0"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -120,7 +126,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/D__WIN32__ /DWIN32 /D_CONSOLE /D_UNICODE /DUNICODE /W3 /nologo /TP"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;C:\Program Files\erlang\erl5.10.4\lib\erl_interface-3.7.15\include&quot;"
@@ -147,10 +152,11 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;C:\Program Files\erlang\erl5.10.4\lib\erl_interface-3.7.15\lib&quot;"
 				IgnoreDefaultLibraryNames="libcmt.lib;msvcrt.lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="0"
 				TargetMachine="17"
 			/>
 			<Tool
