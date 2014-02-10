@@ -1,7 +1,7 @@
 #ifdef __WIN32__
 #include <io.h>
 #include <fcntl.h>
-#include <stdio.h>
+#include <tchar.h>
 #else
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,7 +10,7 @@
 #include "erl_comm.h"
 #include "eterm.h"
 
-int main(int argc, char* argv[])
+int _tmain(int argc, _TCHAR* argv[])
 {
 #ifdef __WIN32__
     _setmode( _fileno( stdout ), _O_BINARY );
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	eterm& et = eterm::getInstance();
 	while (read_cmd(read_buf) > 0) {
 		term t = et.decode(read_buf);
-		printf("Just a breakpoint...");
+		//printf("Just a breakpoint...");
 		vector<byte> write_buf = et.encode(t);
 		write_cmd(write_buf);
 	}
