@@ -14,7 +14,7 @@ LINKDIRS = -L$(ERL_INTERFACE_DIR)/lib -Lpriv
 LINKFLAGS = -levent -lpthread -lerl_interface -lei
 
 all: priv/eterm
-	@echo "erterm compiled"
+	@echo "eterm compiled"
 
 priv/eterm: $(ETERM_OBJS)
 	g++ -Wall $(LINKDIRS) $^ $(LINKFLAGS) -o $@

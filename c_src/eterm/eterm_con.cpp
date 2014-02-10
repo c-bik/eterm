@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
 #endif
 
 
+#if 0
 	byte buf[] = 
 	//{131,100,0,1,97}; // atom a
 	//{131,107,0,3,1,2,3}; // [1,2,3]
@@ -41,6 +42,7 @@ int main(int argc, char* argv[])
 
 	size_t s = b.size();
 	unsigned char *out_buf = (unsigned char *)(&b[0]);*/
+#endif
 
 	vector<byte> read_buf(4);
 	eterm& et = eterm::getInstance();
