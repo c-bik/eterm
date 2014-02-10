@@ -16,6 +16,8 @@
 	typedef  pthread_mutex_t mutex_type;
 #endif
 
+typedef unsigned char byte;
+
 class eterm
 {
 private:

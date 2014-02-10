@@ -35,7 +35,7 @@ int read_exact(vector<byte> & buf, long len)
 {
 	int i, got=0;
 
-	if (buf.size() < len)
+	if ((long)buf.size() < len)
 		buf.resize(len);
 	do {
 		if ((i = i_read(&buf[0]+got, len-got)) <= 0)

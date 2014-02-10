@@ -115,7 +115,7 @@ static void erlterm_to_stl(ETERM *et, term & t)
 		} while(erl_list && !ERL_IS_EMPTY_LIST(erl_list));
 	}
 	else if(ERL_IS_TUPLE(et)) {
-		for(unsigned long long tuple_idx = 0; tuple_idx < ERL_TUPLE_SIZE(et); ++tuple_idx) {
+		for(unsigned long long tuple_idx = 0; tuple_idx < (unsigned long long)ERL_TUPLE_SIZE(et); ++tuple_idx) {
 			term t1;
 			erlterm_to_stl(ERL_TUPLE_ELEMENT(et, tuple_idx), t1);
 			t.set(ERL_TUPLE, "ERL_TUPLE", t1, tuple_idx);
@@ -159,14 +159,14 @@ static ETERM *stl_to_erlterm(term & t)
 			break;
 		case ERL_LIST: {
 			ETERM ** et_ms = new ETERM*[t.lt.size()];
-			for(int i = 0; i < t.lt.size(); ++i)
+			for(unsigned int i = 0; i < t.lt.size(); ++i)
 				et_ms[i] = stl_to_erlterm(t.lt[i]);
 			et = erl_mk_list(et_ms, (int)t.lt.size());
 					   }
 			break;
 		case ERL_TUPLE: {
 			ETERM ** et_ms = new ETERM*[t.lt.size()];
-			for(int i = 0; i < t.lt.size(); ++i)
+			for(unsigned int i = 0; i < t.lt.size(); ++i)
 				et_ms[i] = stl_to_erlterm(t.lt[i]);
 			et = erl_mk_tuple(et_ms, (int)t.lt.size());
 						}
