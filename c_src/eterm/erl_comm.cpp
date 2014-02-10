@@ -31,9 +31,10 @@ int i_write(byte * buf, int to_write)
 	return (-1);
 }
 
-int read_exact(vector<byte> & buf, long len)
+static int read_exact(vector<byte> & buf, size_t len)
 {
-	int i, got=0;
+	int i;
+    size_t got=0;
 
 	if (buf.size() < len)
 		buf.resize(len);
@@ -62,7 +63,7 @@ int write_exact(vector<byte> & buf)
 
 int read_cmd(vector<byte> & buf)
 {
-	int len = 0;
+	size_t len = 0;
 
 	while(len == 0) {
 		if(cin.eof())
@@ -71,7 +72,7 @@ int read_cmd(vector<byte> & buf)
 			len = 4;
 	}
 
-	len = (int)ntohl(*((ul*)&buf[0]));
+	len = (size_t)ntohl(*((ul*)&buf[0]));
 	return read_exact(buf, len);
 }
 
