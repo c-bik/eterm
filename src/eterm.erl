@@ -4,7 +4,8 @@
 -export([
     start_link/0,
     send/2,
-    close/1
+    close/1,
+    info/1
 ]).
 
 %% gen_server callbacks
@@ -30,6 +31,7 @@ start_link() ->
 
 close({?MODULE, PortPid}) -> gen_server:call(PortPid, close, infinity).
 send(Term, {?MODULE, PortPid}) -> gen_server:call(PortPid, {send, Term}, infinity).
+info({?MODULE, PortPid}) -> gen_server:call(PortPid, info, infinity).
 
 %% Callbacks
 init(_) ->
@@ -62,6 +64,8 @@ start_exe(Executable) ->
             {ok, #state{port=Port}}
     end.
 
+handle_call(info, _From, #state{port=Port} = State) ->
+    {reply, erlang:port_info(Port), State};
 handle_call(close, _From, #state{port=Port} = State) ->
     try
         erlang:port_close(Port)
@@ -72,7 +76,7 @@ handle_call(close, _From, #state{port=Port} = State) ->
 handle_call({send, Msg}, _From, #state{port=Port} = State) ->
     BTerm = term_to_binary(Msg),
     true = port_command(Port, BTerm),
-    {reply, ok, State}.
+    {noreply, State}.
 
 handle_cast(Msg, State) ->
     ?L("Received unexpected cast: ~p~n", [Msg]),
@@ -94,7 +98,7 @@ handle_info(Info, State) ->
     {noreply, State}.
 
 terminate(Reason, #state{port=Port}) ->
-    ?L("Terminating ~p: ~p", [{self(), Port}, Reason]),
+    ?L("Terminating ~p: ~p~n", [{self(), Port}, Reason]),
     catch port_close(Port),
     ok.
 

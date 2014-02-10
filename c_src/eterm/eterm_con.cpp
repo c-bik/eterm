@@ -17,8 +17,6 @@ int main(int argc, char* argv[])
     _setmode( _fileno( stdin  ), _O_BINARY );
 #endif
 
-	eterm& et = eterm::getInstance();
-	eterm& et1 = eterm::getInstance();
 
 	byte buf[] = 
 	//{131,100,0,1,97}; // atom a
@@ -38,17 +36,20 @@ int main(int argc, char* argv[])
 	0,0,3,1,2,3,104,2,107,0,4,116,101,115,116,99,52,46,55,57,54,48,48,48,48,48,
 	48,48,48,48,48,48,48,51,48,48,48,48,101,43,48,48,0,0,0,0,0,106};//*/
 
-	term t = et.decode(buf);
-	vector<unsigned char> b = et.encode(t);
+	/*term t = et.decode(buf);
+	vector<byte> b = et.encode(t);
 
 	size_t s = b.size();
-	unsigned char *out_buf = (unsigned char *)(&b[0]);
+	unsigned char *out_buf = (unsigned char *)(&b[0]);*/
 
-	while (read_cmd(buf) > 0) {
+	vector<byte> read_buf(4);
+	eterm& et = eterm::getInstance();
+	while (read_cmd(read_buf) > 0) {
+		term t = et.decode(read_buf);
 		printf("Just a breakpoint...");
+		vector<byte> write_buf = et.encode(t);
+		write_cmd(write_buf);
 	}
 
-	out_buf = NULL;
-	s = 0;
 	return 0;
 }

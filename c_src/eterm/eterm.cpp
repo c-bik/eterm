@@ -40,12 +40,12 @@ void eterm::unlock()
 #endif
 }
 
-term eterm::decode(void *buf)
+term eterm::decode(vector<byte> & buf)
 {
 	unsigned long allocated, freed;
 	term t;
 	if(lock()) {
-		ETERM * etermp = erl_decode((unsigned char *)buf);
+		ETERM * etermp = erl_decode(&buf[0]);
 
 		erlterm_to_stl(etermp, t);
 
