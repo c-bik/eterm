@@ -5,7 +5,7 @@ Erlang binary term STL wrapper
 
 erl_interface <-> stdin/stdout
 ------------------------------
- * for a {packet, 4} binary port, port_close sends 0x0, 0x0, 0x0, 0x0 sequence to shutdown the port
+ * for a [use_stdio, {packet, 4}] binary port, port_close sends 0x0, 0x0, 0x0, 0x0 sequence to shutdown the port
  * [linux] stdin/stdout are buffered, FD '0' for read and '1' to write is used instead
  * [win] _fileno(stdin/out) used to get the FD for stdin and stdout
  * read/write used uniformly in platform independent way
