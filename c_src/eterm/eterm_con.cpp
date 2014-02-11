@@ -35,7 +35,6 @@ int main(int argc, char* argv[])
 	vector<unsigned char> read_buf(4);
 	while (prt.read_cmd(read_buf) > 0) {
 		term t = et.decode(read_buf);
-		//printf("Just a breakpoint...");
 		vector<unsigned char> write_buf = et.encode(t);
 		prt.write_cmd(write_buf);
 	}

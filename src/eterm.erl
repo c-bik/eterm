@@ -68,12 +68,11 @@ handle_call(info, _From, #state{port=Port} = State) ->
     {reply, erlang:port_info(Port), State};
 handle_call(close, _From, #state{port=Port} = State) ->
     try
-%        true = port_command(Port, <<0,0,0,0>>),
         true = erlang:port_close(Port)
     catch
         _:R -> error_logger:error_report("Port close failed with reason: ~p~n", [R])
     end,
-    {reply, ok, State};
+    {stop, normal, ok, State};
 handle_call({send, Msg}, From, #state{port=Port} = State) ->
     BTerm = term_to_binary({From, Msg}),
     true = port_command(Port, BTerm),
@@ -139,6 +138,7 @@ all_types(Et) ->
        , Et:send({1,1.2,atom,"string",<<"binary">>, [1,1.2,atom,"string",<<"binary">>]})),          % List in a Tuple
     ?assertEqual([1,1.2,atom,"string",<<"binary">>,{1,1.2,atom,"string",<<"binary">>}]
        , Et:send([1,1.2,atom,"string",<<"binary">>,{1,1.2,atom,"string",<<"binary">>}])),           % Tuple in a list
+    io:format(user, "Port Status: ~p~n", [Et:info()]),
     ok.
 
 -endif.
