@@ -72,6 +72,7 @@ int port::write_exact(vector<unsigned char> & buf)
 int port::read_cmd(vector<unsigned char> & buf)
 {
 	int len = 0;
+	buf.clear();
 	if (lock()) {
 		if(read_exact(buf, 4) < 0) {
 			unlock();

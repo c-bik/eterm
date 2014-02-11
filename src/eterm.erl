@@ -68,11 +68,12 @@ handle_call(info, _From, #state{port=Port} = State) ->
     {reply, erlang:port_info(Port), State};
 handle_call(close, _From, #state{port=Port} = State) ->
     try
-        erlang:port_close(Port)
+%        true = port_command(Port, <<0,0,0,0>>),
+        true = erlang:port_close(Port)
     catch
         _:R -> error_logger:error_report("Port close failed with reason: ~p~n", [R])
     end,
-    {stop, normal, ok, State};
+    {reply, ok, State};
 handle_call({send, Msg}, From, #state{port=Port} = State) ->
     BTerm = term_to_binary({From, Msg}),
     true = port_command(Port, BTerm),
@@ -124,15 +125,20 @@ eterm_group1_test_() ->
     }}.
 
 all_types(Et) ->
-    ?assertEqual(1, Et:send(1)),
-    ?assertEqual(1.2, Et:send(1.2)),
-    ?assertEqual("a string", Et:send("a string")),
-    ?assertEqual(<<"a binary">>, Et:send(<<"a binary">>)),
-    ?assertEqual(atom, Et:send(atom)),
+    ?assertEqual(1, Et:send(1)),                                                                    % Integer
+    ?assertEqual(1.2, Et:send(1.2)),                                                                % Float
+    ?assertEqual("a string", Et:send("a string")),                                                  % String
+    ?assertEqual(<<"a binary">>, Et:send(<<"a binary">>)),                                          % Binary
+    ?assertEqual(atom, Et:send(atom)),                                                              % Atom
     Ref = make_ref(),
-    ?assertEqual(Ref, Et:send(Ref)),
-    ?assertEqual(self(), Et:send(self())),
-    ?assertEqual({1,1.2,atom,"string",<<"binary">>}, Et:send({1,1.2,atom,"string",<<"binary">>})),
-    ?assertEqual([1,1.2,atom,"string",<<"binary">>], Et:send([1,1.2,atom,"string",<<"binary">>])).
+    ?assertEqual(Ref, Et:send(Ref)),                                                                % Reference
+    ?assertEqual(self(), Et:send(self())),                                                          % Pid
+    ?assertEqual({1,1.2,atom,"string",<<"binary">>}, Et:send({1,1.2,atom,"string",<<"binary">>})),  % Tuple
+    ?assertEqual([1,1.2,atom,"string",<<"binary">>], Et:send([1,1.2,atom,"string",<<"binary">>])),  % List
+    ?assertEqual({1,1.2,atom,"string",<<"binary">>, [1,1.2,atom,"string",<<"binary">>]}
+       , Et:send({1,1.2,atom,"string",<<"binary">>, [1,1.2,atom,"string",<<"binary">>]})),          % List in a Tuple
+    ?assertEqual([1,1.2,atom,"string",<<"binary">>,{1,1.2,atom,"string",<<"binary">>}]
+       , Et:send([1,1.2,atom,"string",<<"binary">>,{1,1.2,atom,"string",<<"binary">>}])),           % Tuple in a list
+    ok.
 
 -endif.

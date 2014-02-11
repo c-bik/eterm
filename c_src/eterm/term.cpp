@@ -1,10 +1,10 @@
 #include "term.h"
 
-void term::set(unsigned char t, string typestr, char * str)
+void term::set(unsigned char t, string typestr, char * s)
 {
 	type_code = t;
 	type = typestr;
-	str = str;
+	str = s;
 }
 
 void term::set(unsigned char t, string typestr, char *ns, int n, int c)
