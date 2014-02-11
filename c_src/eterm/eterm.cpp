@@ -2,9 +2,6 @@
 
 using namespace std;
 
-static void erlterm_to_stl(ETERM *, term &);
-static ETERM * stl_to_erlterm(term &);
-
 eterm::eterm(void)
 {
 	erl_init(NULL, 0);
@@ -19,8 +16,6 @@ eterm::eterm(void)
     }
 #endif
 }
-
-mutex_type eterm::transcoder_lock;
 
 bool eterm::lock()
 {
@@ -40,7 +35,7 @@ void eterm::unlock()
 #endif
 }
 
-term eterm::decode(vector<byte> & buf)
+term eterm::decode(vector<unsigned char> & buf)
 {
 	unsigned long allocated, freed;
 	term t;
@@ -88,7 +83,7 @@ vector<unsigned char> eterm::encode(term & t)
 	return buf;
 }
 
-static void erlterm_to_stl(ETERM *et, term & t)
+void eterm::erlterm_to_stl(ETERM *et, term & t)
 {
 	if(0);
 	else if(ERL_IS_ATOM(et))				t.set(ERL_ATOM,			"ERL_ATOM",			ERL_ATOM_PTR_UTF8(et));
@@ -123,7 +118,7 @@ static void erlterm_to_stl(ETERM *et, term & t)
 	}
 }
 
-static ETERM *stl_to_erlterm(term & t)
+ETERM * eterm::stl_to_erlterm(term & t)
 {
 	ETERM * et = NULL;
 	switch (t.type_code) {

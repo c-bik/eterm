@@ -1,23 +1,9 @@
-#ifdef __WIN32__
-#include <io.h>
-#include <fcntl.h>
-#include <stdio.h>
-#else
-#include <stdlib.h>
-#include <unistd.h>
-#endif
-
-#include "erl_comm.h"
+#include "platform.h"
+#include "port.h"
 #include "eterm.h"
 
 int main(int argc, char* argv[])
 {
-#ifdef __WIN32__
-    _setmode( _fileno( stdout ), _O_BINARY );
-    _setmode( _fileno( stdin  ), _O_BINARY );
-#endif
-
-
 #if 0
 	byte buf[] = 
 	//{131,100,0,1,97}; // atom a
@@ -43,14 +29,15 @@ int main(int argc, char* argv[])
 	size_t s = b.size();
 	unsigned char *out_buf = (unsigned char *)(&b[0]);*/
 #endif
+	eterm& et = eterm::getInstance();
+	port& prt = port::getInstance();
 
 	vector<byte> read_buf(4);
-	eterm& et = eterm::getInstance();
-	while (read_cmd(read_buf) > 0) {
+	while (prt.read_cmd(read_buf) > 0) {
 		term t = et.decode(read_buf);
-		//sprintf("Just a breakpoint...");
+		//printf("Just a breakpoint...");
 		vector<byte> write_buf = et.encode(t);
-		write_cmd(write_buf);
+		prt.write_cmd(write_buf);
 	}
 
 	return 0;

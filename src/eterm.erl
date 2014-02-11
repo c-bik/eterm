@@ -73,10 +73,10 @@ handle_call(close, _From, #state{port=Port} = State) ->
         _:R -> error_logger:error_report("Port close failed with reason: ~p~n", [R])
     end,
     {stop, normal, ok, State};
-handle_call({send, Msg}, _From, #state{port=Port} = State) ->
-    BTerm = term_to_binary(Msg),
+handle_call({send, Msg}, From, #state{port=Port} = State) ->
+    BTerm = term_to_binary({From, Msg}),
     true = port_command(Port, BTerm),
-    {reply, ok, State}.
+    {noreply, State}.
 
 handle_cast(Msg, State) ->
     ?L("Received unexpected cast: ~p~n", [Msg]),
@@ -85,7 +85,12 @@ handle_cast(Msg, State) ->
 %% We got a reply from a previously sent command to the Port.  Relay it to the caller.
 handle_info({Port, {data, Data}}, #state{port=Port} = State) when is_binary(Data) andalso (byte_size(Data) > 0) ->    
     Resp = binary_to_term(Data),
-    ?L("Data ~p~n", [Resp]),
+    case Resp of
+        {From, Msg} ->
+            gen_server:reply(From, Msg);
+        Resp ->
+            ?L("Data ~p~n", [Resp])
+    end,
     {noreply, State};
 handle_info({Port, {exit_status, Status}}, #state{port = Port} = State) ->
     ?L("port ~p exited with status ~p~n", [Port, Status]),

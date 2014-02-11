@@ -6,24 +6,20 @@
 #include <string>
 #include <vector>
 
+#include "platform.h"
+
 #include "erl_interface.h"
 #include "ei.h"
 #include "term.h"
 
-#ifdef __WIN32__
-	typedef HANDLE mutex_type;
-#else
-	typedef  pthread_mutex_t mutex_type;
-#endif
-
-typedef unsigned char byte;
-
 class eterm
 {
 private:
-	static mutex_type transcoder_lock;
-	static inline bool lock();
-	static inline void unlock();
+	mutex_type transcoder_lock;
+	inline bool lock();
+	inline void unlock();
+	void erlterm_to_stl(ETERM *, term &);
+	ETERM * stl_to_erlterm(term &);
 
 	eterm(void);
 	eterm(eterm const&);          // Not implemented
@@ -36,8 +32,8 @@ public:
 		return instance;
 	}
 	static inline void get_stats(unsigned long & allocated, unsigned long & freed) { erl_eterm_statistics(&allocated,&freed); };
-	term decode(vector<byte> &);
-	vector<byte> encode(term &);
+	term decode(vector<unsigned char> &);
+	vector<unsigned char> encode(term &);
 	inline ~eterm(void) {};
 };
 

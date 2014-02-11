@@ -191,15 +191,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\erl_comm.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\eterm.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\eterm_con.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\port.cpp"
 				>
 			</File>
 			<File
@@ -213,11 +213,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\erl_comm.h"
+				RelativePath=".\eterm.h"
 				>
 			</File>
 			<File
-				RelativePath=".\eterm.h"
+				RelativePath=".\platform.h"
+				>
+			</File>
+			<File
+				RelativePath=".\port.h"
 				>
 			</File>
 			<File
