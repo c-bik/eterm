@@ -14,9 +14,12 @@ class port
 private:
 	int stdi;
 	int stdo;
-	mutex_type port_io_lock;
-	inline bool lock();
-	inline void unlock();
+	mutex_type port_r_lock;
+	mutex_type port_w_lock;
+	inline bool lockr();
+	inline void unlockr();
+	inline bool lockw();
+	inline void unlockw();
 	int read_exact(vector<unsigned char> &, unsigned long);
 	int write_exact(vector<unsigned char> &);
 

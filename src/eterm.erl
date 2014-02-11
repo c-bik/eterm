@@ -114,7 +114,7 @@ code_change(_OldVsn, State, _Extra) ->
 -include_lib("eunit/include/eunit.hrl").
 
 eterm_group1_test_() ->
-    {timeout, 60, {
+    {timeout, 600, {
         setup,
         fun() -> eterm:start_link() end,
         fun(Et) -> Et:close() end,
@@ -143,7 +143,7 @@ all_types(Et) ->
     ok.
 
 parallel_call(Et) ->
-    Count = 20000,
+    Count = 30000,
     Self = self(),
     random:seed(erlang:now()),
     Terms = [1, 1.2, atom, "a string", <<"a binary">>, {"a tuple"}, ["a list"], self(), make_ref()],
