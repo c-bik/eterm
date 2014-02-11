@@ -109,3 +109,30 @@ terminate(Reason, #state{port=Port}) ->
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
+
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+
+eterm_group1_test_() ->
+    {timeout, 60, {
+        setup,
+        fun() -> eterm:start_link() end,
+        fun(Et) -> Et:close() end,
+        {with,  [
+            fun all_types/1
+        ]}
+    }}.
+
+all_types(Et) ->
+    ?assertEqual(1, Et:send(1)),
+    ?assertEqual(1.2, Et:send(1.2)),
+    ?assertEqual("a string", Et:send("a string")),
+    ?assertEqual(<<"a binary">>, Et:send(<<"a binary">>)),
+    ?assertEqual(atom, Et:send(atom)),
+    Ref = make_ref(),
+    ?assertEqual(Ref, Et:send(Ref)),
+    ?assertEqual(self(), Et:send(self())),
+    ?assertEqual({1,1.2,atom,"string",<<"binary">>}, Et:send({1,1.2,atom,"string",<<"binary">>})),
+    ?assertEqual([1,1.2,atom,"string",<<"binary">>], Et:send([1,1.2,atom,"string",<<"binary">>])).
+
+-endif.

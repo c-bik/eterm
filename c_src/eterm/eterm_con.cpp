@@ -32,11 +32,11 @@ int main(int argc, char* argv[])
 	eterm& et = eterm::getInstance();
 	port& prt = port::getInstance();
 
-	vector<byte> read_buf(4);
+	vector<unsigned char> read_buf(4);
 	while (prt.read_cmd(read_buf) > 0) {
 		term t = et.decode(read_buf);
 		//printf("Just a breakpoint...");
-		vector<byte> write_buf = et.encode(t);
+		vector<unsigned char> write_buf = et.encode(t);
 		prt.write_cmd(write_buf);
 	}
 

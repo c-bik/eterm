@@ -2,10 +2,7 @@ ETERM_PROJECT_PATH = c_src/eterm
 ERLOCI_DRV_PATH = c_src/erloci_drv
 ERL_INTERFACE_DIR = $(OTPROOT)/lib/erl_interface-3.7.11
 
-ETERM_SRCS = 	$(ETERM_PROJECT_PATH)/term.cpp		\
-				$(ETERM_PROJECT_PATH)/erl_comm.cpp	\
-				$(ETERM_PROJECT_PATH)/eterm.cpp		\
-				$(ETERM_PROJECT_PATH)/eterm_con.cpp
+ETERM_SRCS = 	$(wildcard $(ETERM_PROJECT_PATH)/*.cpp)
 
 ETERM_OBJS =	$(ETERM_SRCS:.cpp=.o)
 
