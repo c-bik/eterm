@@ -119,8 +119,7 @@ eterm_group1_test_() ->
         fun() -> eterm:start_link() end,
         fun(Et) -> Et:close() end,
         {with,  [
-            fun all_types/1,
-            fun parallel_call/1
+            fun all_types/1
         ]}
     }}.
 
@@ -141,34 +140,5 @@ all_types(Et) ->
        , Et:send([1,1.2,atom,"string",<<"binary">>,{1,1.2,atom,"string",<<"binary">>}])),           % Tuple in a list
     io:format(user, "Port Status: ~p~n", [Et:info()]),
     ok.
-
-parallel_call(Et) ->
-    Count = 30000,
-    Self = self(),
-    random:seed(erlang:now()),
-    Terms = [1, 1.2, atom, "a string", <<"a binary">>, {"a tuple"}, ["a list"], self(), make_ref()],
-    Ids = [random:uniform(length(Terms)) || _I <- lists:seq(1,Count)],
-
-    io:format(user, "Spawning ~p processes to send term randomly from ~p~n", [Count, Terms]),
-    Recv = spawn(fun() -> receiver(Self, Count, 1) end),
-    [spawn(fun() ->
-             Term = lists:nth(I, Terms),
-             ?assertEqual(Term, Et:send(Term)),
-             %io:format(user, "-> ~p~n", [self()]),
-             Recv ! {self(), ok}
-           end) || I <- Ids],
-    receive
-        done ->
-           io:format(user, "All ~p processes finished~n", [Count])
-    end.
-
-receiver(Master, Count, SoFar) ->
-    receive
-        {_Pid, ok} ->
-            %io:format(user, "<- ~p ~p/~p~n", [_Pid, SoFar, Count]),
-            if Count =:= SoFar -> Master ! done;
-               true -> receiver(Master, Count, SoFar+1)
-            end
-    end.
 
 -endif.
