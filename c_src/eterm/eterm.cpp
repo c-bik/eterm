@@ -1,3 +1,4 @@
+#include "platform.h"
 #include "eterm.h"
 
 using namespace std;
@@ -5,34 +6,19 @@ using namespace std;
 eterm::eterm(void)
 {
 	erl_init(NULL, 0);
-#ifdef __WIN32__
-    transcoder_lock = CreateMutex(NULL, FALSE, NULL);
-    if (NULL == transcoder_lock) {
+    if (INIT_LOCK(transcoder_lock)) {
         return;
     }
-#else
-    if(pthread_mutex_init(&transcoder_lock, NULL) != 0) {
-        return;
-    }
-#endif
 }
 
 bool eterm::lock()
 {
-#ifdef __WIN32__
-	return (WAIT_OBJECT_0 == WaitForSingleObject((transcoder_lock),INFINITE));
-#else
-	return (0 == pthread_mutex_lock(&transcoder_lock));
-#endif
+	return LOCK(transcoder_lock);
 }
 
 void eterm::unlock()
 {
-#ifdef __WIN32__
-    ReleaseMutex(transcoder_lock);
-#else
-    pthread_mutex_unlock(&transcoder_lock);
-#endif
+	UNLOCK(transcoder_lock);
 }
 
 term eterm::decode(vector<unsigned char> & buf)

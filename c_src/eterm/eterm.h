@@ -1,7 +1,6 @@
 #pragma once
 #ifndef _ETERM_H_
 #define _ETERM_H_
-
 #include <iostream>
 #include <string>
 #include <vector>

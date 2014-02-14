@@ -7,58 +7,36 @@ port::port(void)
 #ifdef __WIN32__
 	stdi = _fileno(stdin);
 	stdo = _fileno(stdout);
-    _setmode(stdi, _O_BINARY );
+    _setmode(stdi, _O_BINARY);
     _setmode(stdo, _O_BINARY);
-    port_r_lock = CreateMutex(NULL, FALSE, NULL);
-    if (NULL == port_r_lock)
-        return;
-    port_w_lock = CreateMutex(NULL, FALSE, NULL);
-    if (NULL == port_w_lock)
-        return;
 #else
 	stdi = 0;
 	stdo = 1;
-    if(pthread_mutex_init(&port_r_lock, NULL) != 0)
-        return;
-    if(pthread_mutex_init(&port_w_lock, NULL) != 0)
-        return;
 #endif
+    if (INIT_LOCK(port_r_lock))
+        return;
+    if (INIT_LOCK(port_w_lock))
+        return;
 }
 
 bool port::lockr()
 {
-#ifdef __WIN32__
-	return (WAIT_OBJECT_0 == WaitForSingleObject((port_r_lock),INFINITE));
-#else
-	return (0 == pthread_mutex_lock(&port_r_lock));
-#endif
+	return LOCK(port_r_lock);
 }
 
 void port::unlockr()
 {
-#ifdef __WIN32__
-    ReleaseMutex(port_r_lock);
-#else
-    pthread_mutex_unlock(&port_r_lock);
-#endif
+	UNLOCK(port_r_lock);
 }
 
 bool port::lockw()
 {
-#ifdef __WIN32__
-	return (WAIT_OBJECT_0 == WaitForSingleObject((port_w_lock),INFINITE));
-#else
-	return (0 == pthread_mutex_lock(&port_w_lock));
-#endif
+	return LOCK(port_w_lock);
 }
 
 void port::unlockw()
 {
-#ifdef __WIN32__
-    ReleaseMutex(port_w_lock);
-#else
-    pthread_mutex_unlock(&port_w_lock);
-#endif
+	UNLOCK(port_w_lock);
 }
 
 int port::read_exact(vector<unsigned char> & buf, unsigned long len)

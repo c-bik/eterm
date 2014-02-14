@@ -15,34 +15,20 @@ static 	mutex_type q_lock;
 
 bool lock()
 {
-#ifdef __WIN32__
-	return (WAIT_OBJECT_0 == WaitForSingleObject((q_lock),INFINITE));
-#else
-	return (0 == pthread_mutex_lock(&q_lock));
-#endif
+	return LOCK(q_lock);
 }
 
 void unlock()
 {
-#ifdef __WIN32__
-    ReleaseMutex(q_lock);
-#else
-    pthread_mutex_unlock(&q_lock);
-#endif
+	UNLOCK(q_lock);
 }
 
 int main(int argc, char* argv[])
 {
-#ifdef __WIN32__
-    q_lock = CreateMutex(NULL, FALSE, NULL);
-    if (NULL == q_lock) {
+	term::format("{.1,0.2,-.3,+4,+.5,un1quoted_atom@, <<\" \\\"Weird\\\" binary\">>, 'A very bad bu\\'t valid atom', 'Another one', \"A long \\\"complicated\\\" list\", <<1,2,3>>, {~a},~i,~w,[~ui,~ull,{~i}],~w}");
+    if (INIT_LOCK(q_lock)) {
         return 0;
     }
-#else
-    if(pthread_mutex_init(&q_lock, NULL) != 0) {
-        return 0;
-    }
-#endif
 
 	eterm& et = eterm::getInstance();
 	port& prt = port::getInstance();
