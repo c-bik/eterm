@@ -6,6 +6,59 @@ term term::format(string fmt, ...)
 	term t;
 	vector<TOKEN> tokens;
 	format_tokenizer(tokens, fmt);
+
+	for(size_t idx = 0; idx < tokens.size(); ++idx) {
+		switch(tokens[idx].t) {
+			case ATOM:
+				break;
+			case INTEGER:
+				break;
+			case LONG:
+				break;
+			case LONGLONG:
+				break;
+			case UINTEGER:
+				break;
+			case ULONG:
+				break;
+			case ULONGLONG:
+				break;
+			case DOUBLE:
+				break;
+			case STRING:
+				break;
+			case BINARY:
+				break;
+			case TERM:
+				break;
+			case PORT:
+				break;
+			case REF:
+				break;
+			case PID:
+				break;
+			case VALUE:
+				break;
+			case TUPLE_START: {
+					size_t idx1 = idx;
+					for(; idx1 < tokens.size(); ++idx1) {
+						if(tokens[idx1].t == TUPLE_END)
+							break;
+					}
+							  }
+				break;
+			case LIST_START: {
+					size_t idx1 = idx;
+					for(; idx1 < tokens.size(); ++idx1) {
+						if(tokens[idx1].t == LIST_END)
+							break;
+					}
+
+							  }
+				break;
+		}
+	}
+
 	return t;
 }
 
@@ -50,7 +103,7 @@ void term::format_tokenizer(vector<term::TOKEN> & tokens, string fmt)
 				if (end_idx > idx) { // We have an atom
 					string sstr = fmt.substr(idx, end_idx-idx);
 					idx = end_idx;
-					tokens.push_back(TOKEN(VALUE,sstr));
+					tokens.push_back(TOKEN(ATOM,sstr));
 				} else {
 					tokens.push_back(TOKEN(UNKNOWN));
 				}
@@ -65,7 +118,7 @@ void term::format_tokenizer(vector<term::TOKEN> & tokens, string fmt)
 				if (end_idx > idx) { // We have a string
 					string sstr = fmt.substr(idx, end_idx-idx);
 					idx = end_idx;
-					tokens.push_back(TOKEN(VALUE,sstr));
+					tokens.push_back(TOKEN(STRING,sstr));
 				} else {
 					tokens.push_back(TOKEN(UNKNOWN));
 				}
@@ -82,7 +135,7 @@ void term::format_tokenizer(vector<term::TOKEN> & tokens, string fmt)
 					if (end_idx > idx) { // We have a binary
 						string sstr = fmt.substr(idx, end_idx-idx);
 						idx = end_idx;
-						tokens.push_back(TOKEN(VALUE,sstr));
+						tokens.push_back(TOKEN(BINARY,sstr));
 					} else {
 						tokens.push_back(TOKEN(UNKNOWN));
 					}
@@ -94,7 +147,7 @@ void term::format_tokenizer(vector<term::TOKEN> & tokens, string fmt)
 					string sstr = fmt.substr(idx, fmt.length()-idx);
 					regex_search(sstr.c_str(), res, re);
 					idx += res[0].length();
-					tokens.push_back(TOKEN(VALUE,res[0]));
+					tokens.push_back(TOKEN(ATOM,res[0]));
 				}
 				// 	integer, double ([+\-\.]*[0-9]+[\.0-9]*)
 				else if ((fmt[idx] >= '0' && fmt[idx] <= '9')
@@ -103,7 +156,10 @@ void term::format_tokenizer(vector<term::TOKEN> & tokens, string fmt)
 					|| fmt[idx] == '.') {
 						size_t _idx = fmt.find(',',idx);
 						string sstr = fmt.substr(idx, _idx - idx);
-						tokens.push_back(TOKEN(VALUE,sstr));
+						if (sstr.find('.',0) !=  string::npos)
+							tokens.push_back(TOKEN(DOUBLE,sstr));
+						else
+							tokens.push_back(TOKEN(INTEGER,sstr));
 						idx = _idx;
 				}
 				else {

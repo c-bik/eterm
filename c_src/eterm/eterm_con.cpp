@@ -25,7 +25,7 @@ void unlock()
 
 int main(int argc, char* argv[])
 {
-	term::format("{.1,0.2,-.3,+4,+.5,un1quoted_atom@, <<\" \\\"Weird\\\" binary\">>, 'A very bad bu\\'t valid atom', 'Another one', \"A long \\\"complicated\\\" list\", <<1,2,3>>, {~a},~i,~w,[~ui,~ull,{~i}],~w}");
+	term::format("{-123456789,.1,0.2,-.3,+4,+.5,un1quoted_atom@, <<\" \\\"Weird\\\" binary\">>, 'A very bad bu\\'t valid atom', 'Another one', \"A long \\\"complicated\\\" list\", <<1,2,3>>, {~a},~i,~w,[~ui,~ull,{~i}],~w}");
     if (INIT_LOCK(q_lock)) {
         return 0;
     }

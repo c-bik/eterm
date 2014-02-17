@@ -179,6 +179,8 @@ public:
 	static inline term tuple(void)								{ return term(TUPLE_START);		};
 	static inline term list(void)								{ return term(LIST_START);		};
 
+	inline void add(term t)										{ lt.push_back(t);				}
+
 private:	
 	static void format_tokenizer(vector<term::TOKEN> &, string);
 	inline term(TYPE t)
